@@ -1,12 +1,28 @@
 [{
     "title":" musica 1",
-    "url": "audios/music03.mp3"
+    "url": "audios/music01.mp3"
     },
 
     {
-        "title":" musica 1",
-        "url": "auios/music01.mp3"
+        "title":" musica 2",
+        "url": "audios/music02.mp3"
+    },
+
+    {
+        "title":" musica 3",
+        "url": "audios/music03.mp3"
+    },
+
+    {
+        "title":"OH MÃE COMPRA BOBBIE GOODS - MC BRINGEL, LUKÃO MEC ( MÚSICA BOBBIE GOODS ) Áudio Oficial",
+        "url": "audios/OH MÃE COMPRA BOBBIE GOODS - MC BRINGEL, LUKÃO MEC ( MÚSICA BOBBIE GOODS ) Áudio Oficial.mp3"
+    },
+
+    {
+        "title":"DIA DELÍCIA ",
+        "url": "audios/DIA DELÍCIA - NAKAMA (Official Music Video).mp3"
     }
 
+        
 ]
     

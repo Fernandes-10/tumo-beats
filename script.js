@@ -5,6 +5,11 @@ window.onload = async function() {
     let request = await fetch("data.json");
     let audiodata = await request.json();
   
+    //Carregar o service worker
+    if ("serviceWorker" in navigator) {
+        navigator.serviceWorker.register("service-worker.js")
+    }
+
 
 
 
@@ -25,20 +30,24 @@ window.onload = async function() {
     
     let audio = document.querySelector("audio");
     let currentmusic = 0
-    console.log(audiodata[currentmusic]);
 
 
 
     // Funções
     function changeTitle(value) {
-    title.innerText = value;
+        title.innerText = value;
     }
     function updateInputbar(value, bar) {
         bar.style.transform = "scaleX(" + value / 100 +")"  
     }
 
     previousButton.onclick = function() {
-    console.log("previous button clicked");
+        currentmusic--;
+        if(currentmusic <0){
+            currentmusic = audiodata.length - 1
+        } 
+        playAudio();
+        console.log("previous", currentmusic)
     }
     
     playbutton.onclick = function() {
@@ -50,19 +59,40 @@ window.onload = async function() {
         }
     }
     nextbutton.onclick = function() {
-        console.log("next button clicked");
+        currentmusic++;
+        if (currentmusic >= audiodata.length) {
+            currentmusic = 0
+        }
+        playAudio();
     }
     scrubinput.querySelector("input").oninput = function(event) {
         let bar = scrubinput.querySelector(".range-bar");
-        updateInputbar(event.target.value, bar); 
+        let value = event.target.value 
+        scrubaudio(value);    
+        updateInputbar(value, bar);
+
     }
     volumeInput.querySelector("input").oninput = function(event) {
         let bar = volumeInput.querySelector(".range-bar");
+        let value = event.target.value;
+        audio.volume = value / 100;
         updateInputbar(event.target.value, bar);
+       
     }
-    fileinput.oninput = function(){
-        console.log("aqui");
-    }
+    fileinput.oninput = function(event){
+        let file = Array.from(fileInput.files)[0];
+        let reader = new FileReader();
+        reader.onload = function() {
+        audioData.push({
+        title: file.name,
+        url: reader.result
+        });
+        }
+        if (file) {
+        reader.readAsDataURL(file);
+        }
+        }
+    
 
     audio.onplay = function(){
         let playIcon = document.querySelector("#icon-play");
@@ -76,10 +106,30 @@ window.onload = async function() {
         let pauseIcon = document.querySelector("#icon-pause");
         playIcon.style.display = "block";
         pauseIcon.style.display = "none";
+
     }
+    audio.ontimeupdate = function() {
+
+        if(!audio.src) return;
+        let bar = scrubinput.querySelector(".range-bar");
+        let  value = (audio.currentTime / audio.duration) * 100;
+        updateInputbar(value, bar)
+        console.log(value)
+      }
+      
+
+      function scrubaudio(value){
+
+        if (!audio.src) return
+        audio.currentTime = audio.duration * (value / 100)
+      }
+
+    
+    
 
     function playAudio() {
         audio.src = audiodata[currentmusic].url
+        changeTitle(audiodata[currentmusic].title)
         audio.play();
     }
 
